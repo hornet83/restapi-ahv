@@ -1,8 +1,19 @@
 #!/bin/bash
 
+if [[ $# -ne 1 ]]
+then
+  echo "usage: $0 vm-name"
+  exit
+fi
+
+# Paul: we could change the detection of the location of the pyhton scripts by expecting 'allSteps.sh'
+# to be on the PATH. This means that invoke as 'allSteps.sh vm-name' rather than './allSteps.sh vm-name'.
+# Then use the following to auto-detect the location of the python scripts:
+BIN=`which $0|awk 'BEGIN { FS="/" } { for ( i=2; i < NF; i++ ) { path = path "/" $i }; print path}'`
+
 # set some vars
 BIN="/usr/local/bin";
-VM_NAME="demovm1";
+VM_NAME=$1;
 
 # python scripts
 CLONEVM="$BIN/clonevm_v2.py";
