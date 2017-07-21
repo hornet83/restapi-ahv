@@ -85,14 +85,6 @@ class RestApiClient():
     with open(cloud_init, 'r') as f:
       data=f.read()
 
-    print data
- 
-#    vm_cust = {
-#         "userdata":"""#cloud-config
-#              hostname: cloud_init_test
-#              fqdn: cloud_init_test.nutanix.com"""
-#    }
-
     vm_cust = {
          "userdata":("""%s""" % (data))
     }
@@ -131,8 +123,6 @@ class RestApiClient():
   def create_clones(self, vm_uuid):
     cloneSpec = self.construct_vm_clone_proto(vm_uuid)
     url = base_url + "vms/"+str(vm_uuid)+"/clone"
-
-    print cloneSpec
 
     print ("CLONE START TIME", time.strftime("%H:%M:%S"))
     r = self.session.post(url, data=json.dumps(cloneSpec))
