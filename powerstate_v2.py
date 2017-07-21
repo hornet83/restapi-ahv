@@ -21,8 +21,8 @@ powerstate = sys.argv[2]
 
 cluster_ip = "cluster.nutanix.local"
 base_url = ("https://%s:9440/PrismGateway/services/rest/v2.0/" % (cluster_ip))
-username = "xxx"
-password = "xxx"
+username = "admin"
+password = "nx2Tech209!"
 
 class RestApiClient():
 

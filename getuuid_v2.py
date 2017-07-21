@@ -9,8 +9,8 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 ## usage: python getuuid_v2.py <vm_name>
 
-username = "xxx"
-password = "xxx"
+username = "admin"
+password = "nx2Tech209!"
 cluster_ip = "cluster.nutanix.local"
 base_url = "https://cluster.nutanix.local:9440/PrismGateway/services/rest/v2.0/"
 vm_name = sys.argv[1]
