@@ -10,6 +10,7 @@ import urllib
 import uuid
 import time
 import sys
+import re
 import urllib3
 requests.packages.urllib3.disable_warnings()
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -19,8 +20,13 @@ clonename = sys.argv[2]
 numvcpus = sys.argv[3]
 numvcpucores = sys.argv[4]
 memory_mb = sys.argv[5]
+ip_address = sys.argv[6]
 
-cloud_init = ("/srv/cloudinit/%s" % (clonename))
+if re.search('oracle', vm_name):
+  cloud_init = ("/srv/cloudinit/oracle")
+else:
+  cloud_init = ("/srv/cloudinit/appserver")
+
 cluster_ip = "cluster.nutanix.local"
 base_url = ("https://%s:9440/PrismGateway/services/rest/v2.0/" % (cluster_ip))
 username = "admin"
@@ -84,6 +90,11 @@ class RestApiClient():
 
     with open(cloud_init, 'r') as f:
       data=f.read()
+
+    data = data.replace('ipaddress', ip_address)
+    data = data.replace('servername', clonename)
+
+    print data
 
     vm_cust = {
          "userdata":("""%s""" % (data))
