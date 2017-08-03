@@ -22,10 +22,14 @@ numvcpucores = sys.argv[4]
 memory_mb = sys.argv[5]
 ip_address = sys.argv[6]
 
-if re.search('oracle', vm_name):
+regexmatch = re.search('.*oracle.*', vm_name, flags=re.IGNORECASE)
+print regexmatch
+if regexmatch:
   cloud_init = ("/srv/cloudinit/oracle")
 else:
   cloud_init = ("/srv/cloudinit/appserver")
+
+print cloud_init
 
 cluster_ip = "cluster.nutanix.local"
 base_url = ("https://%s:9440/PrismGateway/services/rest/v2.0/" % (cluster_ip))
