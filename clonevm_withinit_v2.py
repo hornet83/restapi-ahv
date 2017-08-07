@@ -11,16 +11,25 @@ import uuid
 import time
 import sys
 import re
+import salt.client
 import urllib3
 requests.packages.urllib3.disable_warnings()
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-vm_name = sys.argv[1]
-clonename = sys.argv[2]
-numvcpus = sys.argv[3]
-numvcpucores = sys.argv[4]
-memory_mb = sys.argv[5]
-ip_address = sys.argv[6]
+caller = salt.client.Caller()
+pillardata = caller.function('pillar.items')
+
+new_vm_name = sys.argv[1]
+env = sys.argv[2]
+vm_name = pillardata['env']['template']
+numvcpus = pillardata[env][new_vm_name]['numvcpus']
+numvcpucores = pillardata[env][new_vm_name]['numvcpucores']
+memory_mb = pillardata[env][new_vm_name]['memory_mb']
+domainname = pillardata['env']['domain']
+username = pillardata['env']['login']
+password = pillardata['env']['password']
+cluster_ip = pillardata['env']['clusterip']
+base_url = ("https://%s:9440/PrismGateway/services/rest/v2.0/" % (cluster_ip))
 
 regexmatch = re.search('.*oracle.*', vm_name, flags=re.IGNORECASE)
 print regexmatch
@@ -30,11 +39,6 @@ else:
   cloud_init = ("/srv/cloudinit/appserver")
 
 print cloud_init
-
-cluster_ip = "cluster.nutanix.local"
-base_url = ("https://%s:9440/PrismGateway/services/rest/v2.0/" % (cluster_ip))
-username = "admin"
-password = "nx2Tech666!"
 
 class RestApiClient():
 
@@ -84,7 +88,7 @@ class RestApiClient():
     vm_clone_proto = {
          "numvcpus": numvcpus,
          "num_cores_per_vcpu": numvcpucores,
-         "name": clonename,
+         "name": new_vm_name,
          "memory_mb": memory_mb,
     }
     specs = []
@@ -95,8 +99,8 @@ class RestApiClient():
     with open(cloud_init, 'r') as f:
       data=f.read()
 
-    data = data.replace('ipaddress', ip_address)
-    data = data.replace('servername', clonename)
+    data = data.replace('servername', new_vm_name)
+    data = data.replace('domain', domainname)
 
     print data
 

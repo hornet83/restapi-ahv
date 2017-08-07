@@ -10,19 +10,24 @@ import urllib
 import uuid
 import time
 import sys
+import salt.client
 import urllib3
 requests.packages.urllib3.disable_warnings()
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 ## usage: python  powerstate_v2.py <vmname> <ON|OFF>
 
+caller = salt.client.Caller()
+pillardata = caller.function('pillar.items')
+
 vm_name = sys.argv[1]
 powerstate = sys.argv[2]
+username = pillardata['env']['login']
+password = pillardata['env']['password']
+cluster_ip = pillardata['env']['clusterip']
 
-cluster_ip = "cluster.nutanix.local"
+print cluster_ip
 base_url = ("https://%s:9440/PrismGateway/services/rest/v2.0/" % (cluster_ip))
-username = "admin"
-password = "nx2Tech666!"
 
 class RestApiClient():
 

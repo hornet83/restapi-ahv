@@ -14,6 +14,7 @@ BIN=`which $0|awk 'BEGIN { FS="/" } { for ( i=2; i < NF; i++ ) { path = path "/"
 # set some vars
 BIN="/usr/local/bin";
 VM_NAME=$1;
+ENV=$2;
 
 # python scripts
 CLONEVM="$BIN/clonevm_v2.py";
@@ -22,7 +23,7 @@ POWERSTATE="$BIN/powerstate_v2.py";
 GETIPADDR="$BIN/getipaddr_v2.py";
 
 # create the vm
-python $CLONEVM centos-template $VM_NAME 1 1 1024;
+python $CLONEVM centos-template $VM_NAME $ENV;
 
 # power on the vm
 python $POWERSTATE $VM_NAME ON;

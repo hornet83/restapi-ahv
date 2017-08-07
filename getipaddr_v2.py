@@ -3,16 +3,21 @@ import json
 import warnings
 import sys
 import requests
+import salt.client
 import urllib3
 requests.packages.urllib3.disable_warnings()
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 ## usage: python getipaddr_v2.py <vm_name> <vlan_name>
 
-username = "admin"
-password = "nx2Tech666!"
-cluster_ip = "cluster.nutanix.local"
-base_url = "https://cluster.nutanix.local:9440/PrismGateway/services/rest/v2.0/"
+caller = salt.client.Caller()
+pillardata = caller.function('pillar.items')
+
+username = pillardata['env']['login']
+password = pillardata['env']['password']
+cluster_ip = pillardata['env']['clusterip']
+base_url = ("https://%s:9440/PrismGateway/services/rest/v2.0/" % (cluster_ip))
+
 vm_name = sys.argv[1]
 vlan_name = sys.argv[2]
 
