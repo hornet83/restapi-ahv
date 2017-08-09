@@ -26,19 +26,18 @@ numvcpus = pillardata[env][new_vm_name]['numvcpus']
 numvcpucores = pillardata[env][new_vm_name]['numvcpucores']
 memory_mb = pillardata[env][new_vm_name]['memory_mb']
 domainname = pillardata['env']['domain']
+saltmasterip = pillardata['env']['saltmaster']
 username = pillardata['env']['login']
 password = pillardata['env']['password']
 cluster_ip = pillardata['env']['clusterip']
 base_url = ("https://%s:9440/PrismGateway/services/rest/v2.0/" % (cluster_ip))
 
 regexmatch = re.search('.*oracle.*', vm_name, flags=re.IGNORECASE)
-print regexmatch
+
 if regexmatch:
   cloud_init = ("/srv/cloudinit/oracle")
 else:
   cloud_init = ("/srv/cloudinit/appserver")
-
-print cloud_init
 
 class RestApiClient():
 
@@ -101,8 +100,7 @@ class RestApiClient():
 
     data = data.replace('servername', new_vm_name)
     data = data.replace('domain', domainname)
-
-    print data
+    data = data.replace('masterip', saltmasterip)
 
     vm_cust = {
          "userdata":("""%s""" % (data))
@@ -144,6 +142,7 @@ class RestApiClient():
     url = base_url + "vms/"+str(vm_uuid)+"/clone"
 
     print ("CLONE START TIME", time.strftime("%H:%M:%S"))
+
     r = self.session.post(url, data=json.dumps(cloneSpec))
     if r.status_code != 201:
       raise Exception("POST %s: %s" % (url, r.status_code))
