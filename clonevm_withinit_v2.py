@@ -21,7 +21,6 @@ pillardata = caller.function('pillar.items')
 
 new_vm_name = sys.argv[1]
 env = sys.argv[2]
-vm_name = pillardata['env']['template']
 numvcpus = pillardata[env][new_vm_name]['numvcpus']
 numvcpucores = pillardata[env][new_vm_name]['numvcpucores']
 memory_mb = pillardata[env][new_vm_name]['memory_mb']
@@ -32,12 +31,14 @@ password = pillardata['env']['password']
 cluster_ip = pillardata['env']['clusterip']
 base_url = ("https://%s:9440/PrismGateway/services/rest/v2.0/" % (cluster_ip))
 
-regexmatch = re.search('.*oracle.*', vm_name, flags=re.IGNORECASE)
+regexmatch = re.search('.*oracle.*', new_vm_name, flags=re.IGNORECASE)
 
 if regexmatch:
   cloud_init = ("/srv/cloudinit/oracle")
+  vm_name = pillardata['env']['template-oracle']
 else:
   cloud_init = ("/srv/cloudinit/appserver")
+  vm_name = pillardata['env']['template']
 
 class RestApiClient():
 
