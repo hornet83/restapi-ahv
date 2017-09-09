@@ -18,7 +18,7 @@ password = pillardata['env']['password']
 cluster_ip = pillardata['env']['clusterip']
 base_url = ("https://%s:9440/PrismGateway/services/rest/v2.0/" % (cluster_ip))
 vm_name = pillardata['env']['dnsserver1']
-vlan_name = pillardata['env']['vlan']
+vlan_name = pillardata['env']['infra_vlan']
 
 class RestApiClient():
 
